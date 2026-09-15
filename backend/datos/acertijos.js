@@ -7,7 +7,7 @@ const acertijos = [
         evidenciaId: 3,
         resuelto: false
     }
-    // toca hacer un array de acertijos
 ];
 
 module.exports = acertijos;
+
