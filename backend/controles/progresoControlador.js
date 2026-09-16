@@ -3,7 +3,7 @@ const evidencias = require('../datos/evidencias');
 const acertijos = require('../datos/acertijos');
 const intentos = require('../datos/intentos');
 const pistasUsadas = require('../datos/pistasUsadas');
-const progresos = require('../datos/progresos');
+const progresos = require('../datos/progreso');
 
 const guardarProgreso = (req, res) => {
 

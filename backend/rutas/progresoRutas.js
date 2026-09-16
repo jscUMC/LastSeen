@@ -5,7 +5,7 @@ const router = express.Router();
 const {
     guardarProgreso,
     obtenerProgreso
-} = require('../controles/progresoControles');
+} = require('../controles/progresoControlador');
 
 
 // Guardar progreso
