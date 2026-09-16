@@ -1,5 +1,6 @@
 const acertijos = require('../datos/acertijos');
 const evidencias = require('../datos/evidencias');
+const intentos = require('../datos/intentos');
 
 const resolverAcertijo = (req, res) => {
 
@@ -18,21 +19,37 @@ const resolverAcertijo = (req, res) => {
         });
     }
 
-    if (!respuesta) {
+    if (!respuesta || !respuesta.trim()) {
         return res.status(400).json({
             mensaje: 'La respuesta es obligatoria'
         });
     }
 
-    if (
-        respuesta.trim().toLowerCase() !==
-        acertijo.respuesta.trim().toLowerCase()
-    ) {
+    const respuestaCorrecta =
+        respuesta.trim().toLowerCase() ===
+        acertijo.respuesta.trim().toLowerCase();
+
+    // Registrar el intento
+    const nuevoIntento = {
+        id: intentos.length + 1,
+        investigacionId: Number(investigacionId),
+        acertijoId: Number(acertijoId),
+        respuesta: respuesta,
+        correcta: respuestaCorrecta,
+        fecha: new Date()
+    };
+
+    intentos.push(nuevoIntento);
+
+    // Si la respuesta es incorrecta
+    if (!respuestaCorrecta) {
         return res.status(400).json({
-            mensaje: 'Respuesta incorrecta'
+            mensaje: 'Respuesta incorrecta',
+            intento: nuevoIntento
         });
     }
 
+    // Si la respuesta es correcta
     acertijo.resuelto = true;
 
     const evidencia = evidencias.find(
@@ -45,6 +62,7 @@ const resolverAcertijo = (req, res) => {
 
     res.status(200).json({
         mensaje: 'Respuesta correcta. Evidencia desbloqueada.',
+        intento: nuevoIntento,
         acertijo: acertijo,
         evidencia: evidencia
     });
