@@ -1,9 +1,9 @@
-const investigaciones = require('../datos/investigaciones');
-const evidencias = require('../datos/evidencias');
-const acertijos = require('../datos/acertijos');
-const intentos = require('../datos/intentos');
-const pistasUsadas = require('../datos/pistasUsadas');
-const progresos = require('../datos/progreso');
+const investigaciones = require('../../persistencia/repositorios/InvestigacionRepositorio');
+const evidencias = require('../../persistencia/repositorios/EvidenciaRepositorio');
+const acertijos = require('../../persistencia/repositorios/AcertijoRepositorio');
+const intentos = require('../../persistencia/repositorios/IntentoRepositorio');
+const pistasUsadas = require('../../persistencia/repositorios/PistaUsadaRepositorio');
+const progresos = require('../../persistencia/repositorios/ProgresoRepositorio');
 
 const guardarProgreso = (req, res) => {
 

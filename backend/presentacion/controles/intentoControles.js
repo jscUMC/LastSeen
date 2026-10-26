@@ -1,4 +1,4 @@
-const intentos = require('../datos/intentos');
+const intentos = require('../../persistencia/repositorios/IntentoRepositorio');
 
 const obtenerIntentos = (req, res) => {
 

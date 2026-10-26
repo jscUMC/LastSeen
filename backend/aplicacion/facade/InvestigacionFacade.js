@@ -1,9 +1,9 @@
-const acertijos = require('../../src/datos/acertijos');
-const evidencias = require('../../src/datos/evidencias');
-const intentos = require('../../src/datos/intentos');
-const ranking = require('../../src/datos/ranking');
+const acertijos = require('../../persistencia/repositorios/AcertijoRepositorio');
+const evidencias = require('../../persistencia/repositorios/EvidenciaRepositorio');
+const intentos = require('../../persistencia/repositorios/IntentoRepositorio');
+const ranking = require('../../persistencia/repositorios/RankingRepositorio');
 
-const investigaciones = require('../../src/datos/investigaciones');
+const investigaciones = require('../../persistencia/repositorios/InvestigacionRepositorio');
 
 const ValidadorRespuesta =
     require('../../dominio/strategy/ValidadorRespuesta');

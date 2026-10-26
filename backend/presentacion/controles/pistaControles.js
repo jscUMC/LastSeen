@@ -1,6 +1,6 @@
-const acertijos = require('../datos/acertijos');
-const pistas = require('../datos/pistas');
-const pistasUsadas = require('../datos/pistasUsadas');
+const acertijos = require('../../persistencia/repositorios/AcertijoRepositorio');
+const pistas = require('../../persistencia/repositorios/PistaRepositorio');
+const pistasUsadas = require('../../persistencia/repositorios/PistaUsadaRepositorio');
 
 const solicitarPista = (req, res) => {
 

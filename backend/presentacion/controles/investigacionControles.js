@@ -1,5 +1,5 @@
-const investigaciones = require('../datos/investigaciones');
-const Investigacion = require('../modelos/Investigacion');
+const investigaciones = require('../../persistencia/repositorios/InvestigacionRepositorio');
+const Investigacion = require('../../dominio/modelos/Investigacion');
 
 const iniciarInvestigacion = (req, res) => {
     const { nombreUsuario } = req.body;

@@ -1,8 +1,8 @@
-const investigaciones = require('../datos/investigaciones');
-const evidencias = require('../datos/evidencias');
-const ranking = require('../datos/ranking');
+const investigaciones = require('../../persistencia/repositorios/InvestigacionRepositorio');
+const evidencias = require('../../persistencia/repositorios/EvidenciaRepositorio');
+const ranking = require('../../persistencia/repositorios/RankingRepositorio');
 
-const InvestigacionFacade = require('../facade/InvestigacionFacade');
+const InvestigacionFacade = require('../../aplicacion/facade/InvestigacionFacade');
 
 const investigacionFacade = new InvestigacionFacade();
 
