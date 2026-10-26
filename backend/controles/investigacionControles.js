@@ -1,4 +1,5 @@
 const investigaciones = require('../datos/investigaciones');
+const Investigacion = require('../modelos/Investigacion');
 
 const iniciarInvestigacion = (req, res) => {
     const { nombreUsuario } = req.body;
@@ -9,20 +10,12 @@ const iniciarInvestigacion = (req, res) => {
         });
     }
 
-    const nuevaInvestigacion = {
-        id: investigaciones.length + 1,
-        nombreUsuario,
-        fechaInicio: new Date(),
-        fechaFinalizacion: null,
-        tiempoUtilizado: null,
-        finalizada: false
-    };
-
+    const nuevaInvestigacion = new Investigacion(investigaciones.length + 1, nombreUsuario);
     investigaciones.push(nuevaInvestigacion);
 
     res.status(201).json({
         mensaje: 'Investigación iniciada correctamente',
-        investigacion: nuevaInvestigacion
+        investigacion: nuevaInvestigacion.toJSON()
     });
 };
 
