@@ -1,12 +1,13 @@
+const Acertijo = require('../modelos/Acertijo');
+
 const acertijos = [
-    {
-        id: 1,
-        investigacionId: 1,
-        pregunta: '¿Cuál es la palabra que falta? TODO ESTÁ ___ LO QUE PARECE.',
-        respuesta: 'en',
-        evidenciaId: 3,
-        resuelto: false
-    }
+    new Acertijo(
+        1,
+        1,
+        '¿Cuál es la palabra que falta? TODO ESTÁ ___ LO QUE PARECE.',
+        'en',
+        3
+    )
 ];
 
 module.exports = acertijos;

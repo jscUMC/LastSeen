@@ -14,3 +14,5 @@ class Acertijo {
         this.resuelto = false;
     }
 }
+
+module.exports = Acertijo;

@@ -12,7 +12,7 @@ const evidencias = [
         investigacionId: 1,
         tipo: 'IMAGEN',
         titulo: 'Fotografía desconocida',
-        contenido: 'fotografia_01.jpg',
+        contenido: 'fotografia_01',
         desbloqueada: true
     },
     {
@@ -20,7 +20,7 @@ const evidencias = [
         investigacionId: 1,
         tipo: 'DOCUMENTO',
         titulo: 'Documento privado',
-        contenido: 'documento_01.pdf',
+        contenido: 'documento_01',
         desbloqueada: false
     }
 ];

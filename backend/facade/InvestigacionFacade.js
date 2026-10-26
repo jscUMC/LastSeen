@@ -1,6 +1,9 @@
 const acertijos = require('../datos/acertijos');
 const evidencias = require('../datos/evidencias');
 const intentos = require('../datos/intentos');
+const ranking = require('../datos/ranking');
+
+const investigaciones = require('../datos/investigaciones');
 
 const ValidadorRespuesta =
     require('../strategy/ValidadorRespuesta');
@@ -85,6 +88,60 @@ class InvestigacionFacade {
             intento: nuevoIntento,
             acertijo: acertijo,
             evidencia: evidencia
+        };
+    }
+
+    finalizarInvestigacion(investigacionId) {
+        const investigacion = investigaciones.find(
+            investigacion => investigacion.id === investigacionId
+        );
+
+        if (!investigacion) {
+            return{
+                exito: false,
+                codigo: 404,
+                mensaje: 'Investigación a finalizar no encontrada'
+            };
+        }
+
+        if (!investigacion.puedeContinuar()) {
+
+            return {
+                exito: false,
+                codigo: 400,
+                mensaje: 'La investigación ya fue finalizada'
+            };
+        }
+
+        const finalizada = investigacion.finalizar();
+
+        if (!finalizada) {
+
+            return {
+                exito: false,
+                codigo: 400,
+                mensaje: 'No se puede finalizar la investigación'
+            };
+        }
+
+        ranking.push({
+            nombreUsuario: investigacion.nombreUsuario,
+            tiempoTotal: investigacion.tiempoUtilizado
+        });
+
+        ranking.sort((a, b) =>
+            a.tiempoTotal - b.tiempoTotal
+        );
+
+        if (ranking.length > 10) {
+            ranking.splice(10);
+        }
+
+        return {
+            exito: true,
+            codigo: 200,
+            mensaje: 'Investigación finalizada correctamente',
+            investigacion: investigacion
         };
     }
 }
