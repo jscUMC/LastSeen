@@ -3,10 +3,11 @@ const evidencias = require('../datos/evidencias');
 const ranking = require('../datos/ranking');
 
 const finalizarInvestigacion = (req, res) => {
-    const id = parseInt(req.params.id);
+    const { investigacionId } = req.params;
 
     const investigacion = investigaciones.find(
-        investigacion => investigacion.id === id
+        investigacion =>
+            investigacion.id === Number(investigacionId)
     );
 
     if (!investigacion) {
@@ -15,23 +16,60 @@ const finalizarInvestigacion = (req, res) => {
         });
     }
 
-    if (!investigacion.puedeContinuar()) {
+    if (investigacion.estado === 'FINALIZADA') {
         return res.status(400).json({
             mensaje: 'La investigación ya fue finalizada'
         });
     }
 
-    const finalizada = investigacion.finalizar();
+    const evidenciasInvestigacion = evidencias.filter(
+        evidencia =>
+            evidencia.investigacionId === Number(investigacionId)
+    );
 
-    if (!finalizada) {
+    if (evidenciasInvestigacion.length === 0) {
         return res.status(400).json({
-            mensaje: 'No se puede finalizar la investigación'
+            mensaje: 'La investigación no tiene evidencias asociadas'
         });
     }
-    
-    return res.status(200).json({
+
+    const investigacionCompleta = evidenciasInvestigacion.every(
+        evidencia => evidencia.desbloqueada === true
+    );
+
+    if (!investigacionCompleta) {
+        return res.status(400).json({
+            mensaje: 'La investigación aún no está completa'
+        });
+    }
+
+    const fechaFin = new Date();
+
+    const tiempoMilisegundos =
+        fechaFin - new Date(investigacion.fechaInicio);
+
+    const tiempoTotal = Math.floor(
+        tiempoMilisegundos / 1000
+    );
+
+    investigacion.fechaFin = fechaFin;
+    investigacion.tiempoTotal = tiempoTotal;
+    investigacion.estado = 'FINALIZADA';
+
+    const resultadoRanking = {
+        posicion: ranking.length + 1,
+        investigacionId: investigacion.id,
+        nombreUsuario: investigacion.nombreUsuario,
+        tiempoTotal: tiempoTotal,
+        fechaFin: fechaFin
+    };
+
+    ranking.push(resultadoRanking);
+
+    res.status(200).json({
         mensaje: 'Investigación finalizada correctamente',
-        investigacion: investigacion.toJSON()
+        investigacion,
+        ranking: resultadoRanking
     });
 };
 
