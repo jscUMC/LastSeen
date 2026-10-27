@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Last Seen - Tablero de Investigación</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/tablero.css">
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+</head>
+<body class="dashboard-bg">
+    <div class="dashboard-container">
+        
+        <!-- Panel Lateral Izquierdo -->
+        <aside class="sidebar">
+            <div class="timer-box">
+                <span class="timer-title">CRONÓMETRO DE PARTIDA</span>
+                <span class="timer-subtitle">TIEMPO TOTAL:</span>
+                <div id="chronometer" class="timer-display">00:00:00</div>
+            </div>
+
+            <nav class="main-menu">
+                <ul>
+                    <li><a href="#" class="menu-item">🏠 MENÚ PRINCIPAL</a></li>
+                    <li>
+                        <a href="#" class="menu-item active">🔍 REGISTRO DE PISTAS</a>
+                    </li>
+                    <li><a href="#" class="menu-item">📋 PRUEBAS</a></li>
+                    <li><a href="#" class="menu-item">👤 SOSPECHOSOS</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Área Central (Corcho) -->
+        <main class="main-board">
+            <div class="corkboard-container">
+                <h2 class="board-title">INVESTIGACIÓN EN CURSO</h2>
+                <div class="corkboard">
+                    <!-- Aquí se inyectarán las notas, fotos e hilos rojos dinámicamente -->
+                </div>
+            </div>
+            
+            <!-- Barra inferior de progreso -->
+            <div class="bottom-bar">
+                <div class="progress-section">
+                    <span class="progress-title">PROGRESO DE LA INVESTIGACIÓN</span>
+                    <div class="progress-bar-container">
+                        <div id="investigationProgress" class="progress-bar-fill" style="width: 0%;"></div>
+                        <span id="progressText" class="progress-text">0%</span>
+                    </div>
+                </div>
+                <button class="btn-clues">CLUES</button>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/tablero.js"></script>
+</body>
+</html>
