@@ -1,4 +1,4 @@
-const ranking = require('../datos/ranking');
+const ranking = require('../../persistencia/repositorios/RankingRepositorio');
 
 const obtenerRanking = (req, res) => {
     const rankingOrdenado = [...ranking].sort(

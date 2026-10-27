@@ -1,15 +1,15 @@
 const express = require('express');
 const cors = require('cors');
 
-const investigacionRoutes = require('../rutas/investigacionRutas');
-const evidenciaRoutes = require('../rutas/evidenciaRutas');
-const acertijoRoutes = require('../rutas/acertijoRutas');
-const finalizarInvestigacionRoutes = require('../rutas/finalizarInvestigacionRutas');
-const rankingRoutes = require('../rutas/rankingRutas');
-const intentoRoutes = require('../rutas/intentoRutas');
-const pistaRoutes = require('../rutas/pistaRutas');
-const pistaUsoRoutes = require('../rutas/pistaUsoRutas');
-const progresoRoutes =require('../rutas/progresoRutas');
+const investigacionRoutes = require('../presentacion/rutas/investigacionRutas');
+const evidenciaRoutes = require('../presentacion/rutas/evidenciaRutas');
+const acertijoRoutes = require('../presentacion/rutas/acertijoRutas');
+const finalizarInvestigacionRoutes = require('../presentacion/rutas/finalizarInvestigacionRutas');
+const rankingRoutes = require('../presentacion/rutas/rankingRutas');
+const intentoRoutes = require('../presentacion/rutas/intentoRutas');
+const pistaRoutes = require('../presentacion/rutas/pistaRutas');
+const pistaUsoRoutes = require('../presentacion/rutas/pistaUsoRutas');
+const progresoRoutes =require('../presentacion/rutas/progresoRutas');
 const app = express();
 
 app.use(cors());

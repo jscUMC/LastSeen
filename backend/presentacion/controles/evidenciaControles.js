@@ -1,4 +1,4 @@
-const evidencias = require('../datos/evidencias');
+const evidencias = require('../../persistencia/repositorios/EvidenciaRepositorio');
 
 const obtenerEvidencias = (req, res) => {
 

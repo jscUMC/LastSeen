@@ -1,4 +1,4 @@
-const pistasUsadas = require('../datos/pistasUsadas');
+const pistasUsadas = require('../../persistencia/repositorios/PistaUsadaRepositorio');
 
 const obtenerPistasUsadas = (req, res) => {
 
