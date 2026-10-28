@@ -21,7 +21,7 @@ loginForm.addEventListener('submit', async (e) => {
 
             if (response.ok) {
 
-                localStorage.setItem('investigacionId', data.investigacion.id);
+                localStorage.setItem('investigacionId', 1);
                 localStorage.setItem('nombreJugador', usernameInput);
                 
                 // Redirigimos al tablero
