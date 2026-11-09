@@ -11,7 +11,7 @@ const iniciarInvestigacion = (req, res) => {
     }
 
     const nuevaInvestigacion = new Investigacion(investigaciones.length + 1, nombreUsuario);
-   // investigaciones.push(nuevaInvestigacion);
+    investigaciones.push(nuevaInvestigacion);
 
     res.status(201).json({
         mensaje: 'Investigación iniciada correctamente',

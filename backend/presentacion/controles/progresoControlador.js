@@ -5,6 +5,8 @@ const intentos = require('../../persistencia/repositorios/IntentoRepositorio');
 const pistasUsadas = require('../../persistencia/repositorios/PistaUsadaRepositorio');
 const progresos = require('../../persistencia/repositorios/ProgresoRepositorio');
 
+const Inves = require('../../dominio/modelos/Investigacion');
+
 const guardarProgreso = (req, res) => {
 
     const { investigacionId } = req.params;
@@ -12,6 +14,7 @@ const guardarProgreso = (req, res) => {
     const id = Number(investigacionId);
 
     // Buscar la investigación
+
     const investigacion = investigaciones.find(
         investigacion => investigacion.id === id
     );

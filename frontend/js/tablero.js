@@ -11,12 +11,12 @@ document.addEventListener('DOMContentLoaded', () => {
     async function cargarProgreso() {
         try {
             
-            const response = await fetch(`${API_BASE_URL}/progresos/${investigacionId}`);
+            const response = await fetch(`${API_BASE_URL}/investigaciones/${investigacionId}/progreso`);
             
             if (response.ok) {
                 const data = await response.json();
-                
-                const porcentaje = data.porcentajeCompletado || 0; 
+                console.log("Progreso cargado:", data);
+                const porcentaje = data.porcentajeCompletado || 10; 
                 actualizarProgreso(porcentaje);
             }
         } catch (error) {
