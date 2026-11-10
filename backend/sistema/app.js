@@ -1,5 +1,9 @@
+const path = require('path');
 const express = require('express');
 const cors = require('cors');
+
+const { PUERTO } = require('../configuracion/variablesEntorno');
+const pool = require('../persistencia/conexion/database');
 
 const investigacionRoutes = require('../presentacion/rutas/investigacionRutas');
 const evidenciaRoutes = require('../presentacion/rutas/evidenciaRutas');
@@ -25,6 +29,30 @@ app.use('/api/investigaciones', pistaRoutes);
 app.use('/api/investigaciones', pistaUsoRoutes);
 app.use('/api/investigaciones', progresoRoutes);
 
-app.listen(3000, () => {
-    console.log('Servidor ejecutándose en http://localhost:3000');
+// Sirve el frontend y los recursos del expediente (fotos, PDF, audios) desde el mismo servidor
+app.use(express.static(path.join(__dirname, '../../frontend')));
+
+// Express 5 envía aquí los errores de los controles async (p. ej. PostgreSQL apagado)
+app.use((error, req, res, next) => {
+    // 22P02 = id con formato inválido (p. ej. /api/investigaciones/abc/...)
+    if (error.code === '22P02') {
+        return res.status(400).json({ mensaje: 'Identificador inválido' });
+    }
+    console.error(error);
+    res.status(500).json({ mensaje: 'Error interno del servidor (revisa la conexión con la base de datos)' });
 });
+
+if (require.main === module) {
+    app.listen(PUERTO, async () => {
+        console.log(`Servidor ejecutándose en http://localhost:${PUERTO}`);
+        try {
+            await pool.query('SELECT 1 FROM investigacion LIMIT 1');
+            console.log('Conectado a PostgreSQL');
+        } catch (error) {
+            console.error(`⚠ No se pudo usar la base de datos: ${error.message}`);
+            console.error('  Enciende PostgreSQL, revisa backend/.env y ejecuta: npm run db:crear');
+        }
+    });
+}
+
+module.exports = app;
