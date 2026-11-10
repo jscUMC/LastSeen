@@ -1,8 +1,10 @@
 const investigaciones = require('../../persistencia/repositorios/InvestigacionRepositorio');
-const Investigacion = require('../../dominio/modelos/Investigacion');
 
-const iniciarInvestigacion = (req, res) => {
-    const { nombreUsuario } = req.body;
+const iniciarInvestigacion = async (req, res) => {
+    const { nombreUsuario: nombre } = req.body || {};
+    const nombreUsuario = typeof nombre === 'string'
+        ? nombre.trim().slice(0, 40)
+        : '';
 
     if (!nombreUsuario) {
         return res.status(400).json({
@@ -10,8 +12,7 @@ const iniciarInvestigacion = (req, res) => {
         });
     }
 
-    const nuevaInvestigacion = new Investigacion(investigaciones.length + 1, nombreUsuario);
-    investigaciones.push(nuevaInvestigacion);
+    const nuevaInvestigacion = await investigaciones.crear(nombreUsuario);
 
     res.status(201).json({
         mensaje: 'Investigación iniciada correctamente',
