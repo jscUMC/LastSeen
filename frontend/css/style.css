@@ -17,7 +17,7 @@
 body.login-bg {
     
     background-color: var(--bg-dark);
-    background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('../assets/desk-bg.jpg');
+    background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('../assets/EXPEDIENTE_001_EL_ULTIMO_REGISTRO/01_FOTOGRAFIAS/F08_Archivo.jpeg');
     background-size: cover;
     background-position: center;
     font-family: 'Courier Prime', monospace;

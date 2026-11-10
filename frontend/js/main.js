@@ -21,7 +21,8 @@ loginForm.addEventListener('submit', async (e) => {
 
             if (response.ok) {
 
-                localStorage.setItem('investigacionId', 1);
+                localStorage.clear(); // descarta datos de una partida anterior
+                localStorage.setItem('investigacionId', data.investigacion.id);
                 localStorage.setItem('nombreJugador', usernameInput);
                 
                 // Redirigimos al tablero
