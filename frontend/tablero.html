@@ -1,18 +1,29 @@
+Ver código
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Last Seen - Tablero de Investigación</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/tablero.css">
-    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Oswald:wght@500;700&display=swap"
+        rel="stylesheet">
 </head>
+
 <body class="dashboard-bg">
     <div class="dashboard-container">
-        
+
         <!-- Panel Lateral Izquierdo -->
         <aside class="sidebar">
+            <div class="case-file">
+                <span class="case-code">EXPEDIENTE SJ-2025-001</span>
+                <span class="case-title">EL ÚLTIMO REGISTRO</span>
+                <span class="case-detective">Investigador: <strong id="nombreDetective">—</strong></span>
+            </div>
+
             <div class="timer-box">
                 <span class="timer-title">CRONÓMETRO DE PARTIDA</span>
                 <span class="timer-subtitle">TIEMPO TOTAL:</span>
@@ -29,17 +40,31 @@
                     <li><a href="#" class="menu-item">👤 SOSPECHOSOS</a></li>
                 </ul>
             </nav>
+
+            <dl class="case-stats">
+                <div><dt>Evidencias</dt><dd id="statEvidencias">0 / 0</dd></div>
+                <div><dt>Acertijos</dt><dd id="statAcertijos">0 / 0</dd></div>
+                <div><dt>Pistas usadas</dt><dd id="statPistas">0</dd></div>
+                <div><dt>Intentos</dt><dd id="statIntentos">0</dd></div>
+                <div><dt>Estado</dt><dd id="statEstado">EN PROGRESO</dd></div>
+            </dl>
         </aside>
 
         <!-- Área Central (Corcho) -->
         <main class="main-board">
             <div class="corkboard-container">
                 <h2 class="board-title">INVESTIGACIÓN EN CURSO</h2>
+                <div class="board-filters" role="group" aria-label="Filtrar evidencias">
+                    <button type="button" class="filter-btn active" data-tipo="todas">TODAS</button>
+                    <button type="button" class="filter-btn" data-tipo="documento">📄 DOCUMENTOS</button>
+                    <button type="button" class="filter-btn" data-tipo="fotografia">📷 FOTOGRAFÍAS</button>
+                    <button type="button" class="filter-btn" data-tipo="audio">🎧 AUDIOS</button>
+                </div>
                 <div class="corkboard">
-             
+                    <!-- Aquí se inyectarán las notas, fotos e hilos rojos dinámicamente -->
                 </div>
             </div>
-            
+
             <!-- Barra inferior de progreso -->
             <div class="bottom-bar">
                 <div class="progress-section">
@@ -49,11 +74,131 @@
                         <span id="progressText" class="progress-text">0%</span>
                     </div>
                 </div>
-                <button class="btn-clues">Pistas</button>
+                <p id="objetivoActual" class="current-objective"></p>
+                <button id="btnFinalizar" style="display: none; background-color: #1b5e20; border-color: #4caf50; color: #fff; padding: 10px 30px; font-family: 'Oswald', sans-serif; font-size: 1.2rem; border-radius: 20px; cursor: pointer;">CASO RESUELTO</button>
             </div>
         </main>
     </div>
 
+    <!-- Modal / Visor para resolver acertijos -->
+    <div id="modalAcertijo" class="modal-hidden">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h3 id="modalTitle">RESOLVER ACERTIJO</h3>
+            <p id="modalPregunta">Introduce la respuesta descubierta en esta evidencia:</p>
+
+            <form id="formAcertijo">
+                <input type="text" id="respuestaInput" placeholder="Tu respuesta..." required autocomplete="off">
+                <button type="submit" class="btn-submit-answer">COMPROBAR RESPUESTA</button>
+                <!-- NUEVO BOTÓN DE PISTA -->
+                <button type="button" id="btnPedirPista" class="btn-submit-answer" style="margin-top: 10px; border-color: #ffc107; color: #ffc107;">PEDIR PISTA</button>
+            </form>
+
+            <p id="modalFeedback" class="feedback-msg"></p>
+        </div>
+    </div>
+
+    <!-- Modal / Visor de evidencias (fotografías, documentos y audios) -->
+    <div id="modalEvidencia" class="modal-hidden">
+        <div class="modal-content evidence-viewer">
+            <span class="close-btn close-evidencia-btn">&times;</span>
+            <header class="viewer-header">
+                <span id="visorCodigo" class="viewer-code"></span>
+                <h3 id="visorTitulo"></h3>
+                <span id="visorTipo" class="viewer-type"></span>
+            </header>
+            <div id="visorContenido" class="viewer-body"></div>
+            <p id="visorDescripcion" class="viewer-description"></p>
+            <div id="visorAcertijo" class="viewer-riddle"></div>
+            <p class="viewer-disclaimer">Documento ficticio – proyecto académico</p>
+        </div>
+    </div>
+
+    <!-- Modal / Índice de pruebas -->
+    <div id="modalPruebas" class="modal-hidden">
+        <div class="modal-content index-modal">
+            <span class="close-btn close-pruebas-btn">&times;</span>
+            <h3 class="index-title">📋 ÍNDICE DE PRUEBAS · SJ-2025-001</h3>
+            <p id="pruebasResumen" class="index-summary"></p>
+            <div class="index-table-wrapper">
+                <table class="index-table">
+                    <thead>
+                        <tr><th>ID</th><th>EVIDENCIA</th><th>TIPO</th><th>ACERTIJO</th></tr>
+                    </thead>
+                    <tbody id="pruebasTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal / Personas relacionadas -->
+    <div id="modalSospechosos" class="modal-hidden">
+        <div class="modal-content index-modal">
+            <span class="close-btn close-sospechosos-btn">&times;</span>
+            <h3 class="index-title">👤 PERSONAS RELACIONADAS</h3>
+            <div id="sospechososContenedor" class="suspects-grid"></div>
+        </div>
+    </div>
+
+    <!-- Modal / Visor del Registro de Pistas -->
+    <div id="modalRegistro" class="modal-hidden">
+        <div class="modal-content" style="max-width: 600px; background-color: #2c2c2c;">
+            <span class="close-registro-btn close-btn">&times;</span>
+            <h3 style="color: #ffb74d; border-bottom: 1px solid #555; padding-bottom: 10px; margin-bottom: 20px;">
+                🔍 REGISTRO DE PISTAS
+            </h3>
+
+            <div id="listaPistasContenedor" style="text-align: left; max-height: 300px; overflow-y: auto; padding-right: 10px;">
+                <!-- Las pistas se inyectarán aquí -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal / Visor de Fin de Juego y Ranking -->
+    <div id="modalFinal" class="modal-hidden">
+        <div class="modal-content final-modal" style="max-width: 680px; background-color: #111; border: 3px solid #4caf50;">
+            <h2 style="color: #4caf50; font-family: 'Oswald', sans-serif; font-size: 3rem; margin-bottom: 5px;">CASO CERRADO</h2>
+            <p id="mensajeVictoria" style="color: #ccc; font-size: 1.1rem; margin-bottom: 20px;">
+                Has resuelto el misterio, detective.
+            </p>
+
+            <section class="case-conclusion">
+                <h4>INFORME DE CIERRE · EXPEDIENTE SJ-2025-001</h4>
+                <p>Daniel Herrera no fue secuestrado. Abandonó voluntariamente su apartamento el 15 de octubre de 2025 y se mantuvo apartado para comprobar quién intentaría ocultar o controlar las pruebas que había reunido. El 16 de octubre seguía en contacto con su hermano.</p>
+                <p>Andrés y Laura conocían solo una parte del plan. Ocultaron información —el mensaje del 16 de octubre y el sobre del 12— para protegerlo, pero no provocaron su desaparición.</p>
+                <p>La pieza que faltaba no estaba en el apartamento, sino donde comenzó todo: el Archivo Municipal. El registro original de modificaciones confirma que la fotografía 023, con fecha original 12/04/2022, fue modificada el 15/04/2022 con la observación «Modificación autorizada». El responsable consignado es <strong>Esteban Morales</strong>, con firma «E. Morales».</p>
+                <p class="conclusion-open">Queda pendiente establecer qué se modificó exactamente, por qué, y quién más tuvo acceso a las versiones originales.</p>
+                <div id="audioCierre" class="closing-audio"></div>
+            </section>
+
+            <h3 style="color: #ffb74d; border-bottom: 1px solid #444; padding-bottom: 10px; margin-top: 20px; font-family: 'Oswald', sans-serif;">
+                🏆 RANKING DE DETECTIVES
+            </h3>
+
+            <div style="max-height: 250px; overflow-y: auto; margin-top: 15px;">
+                <table style="width: 100%; color: #fff; text-align: left; font-family: 'Courier Prime', monospace; border-collapse: collapse;">
+                    <thead>
+                        <tr style="color: #888; border-bottom: 1px solid #444;">
+                            <th style="padding: 10px 5px;">POS</th>
+                            <th style="padding: 10px 5px;">DETECTIVE</th>
+                            <th style="padding: 10px 5px; text-align: right;">TIEMPO (seg)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rankingTableBody">
+                        <!-- Aquí se inyectará el top de jugadores -->
+                    </tbody>
+                </table>
+            </div>
+
+            <button id="btnVolverInicio" class="btn-submit-answer" style="margin-top: 30px; border-color: #4caf50;">
+                VOLVER AL MENÚ PRINCIPAL
+            </button>
+        </div>
+    </div>
+
     <script src="js/tablero.js"></script>
+
+
 </body>
+
 </html>
