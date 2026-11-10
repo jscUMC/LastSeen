@@ -5,13 +5,13 @@ const investigacionFacade =
     new InvestigacionFacade();
 
 
-const resolverAcertijo = (req, res) => {
+const resolverAcertijo = async (req, res) => {
 
     const { investigacionId, acertijoId } = req.params;
-    const { respuesta } = req.body;
+    const { respuesta } = req.body || {};
 
     const resultado =
-        investigacionFacade.resolverAcertijo(
+        await investigacionFacade.resolverAcertijo(
             investigacionId,
             acertijoId,
             respuesta

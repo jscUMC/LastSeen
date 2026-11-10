@@ -1,17 +1,14 @@
 const pistasUsadas = require('../../persistencia/repositorios/PistaUsadaRepositorio');
 
-const obtenerPistasUsadas = (req, res) => {
-
+const obtenerPistasUsadas = async (req, res) => {
     const { investigacionId } = req.params;
 
-    const usos = pistasUsadas.filter(
-        uso =>
-            uso.investigacionId === Number(investigacionId)
-    );
+    // Cada uso trae el texto de la pista y el acertijo al que pertenece (JOIN en el repositorio)
+    const pistasConTexto = await pistasUsadas.obtenerPorInvestigacion(Number(investigacionId));
 
     res.status(200).json({
         mensaje: 'Pistas utilizadas obtenidas correctamente',
-        pistasUsadas: usos
+        pistasUsadas: pistasConTexto
     });
 };
 

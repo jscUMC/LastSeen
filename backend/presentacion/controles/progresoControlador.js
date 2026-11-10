@@ -5,19 +5,16 @@ const intentos = require('../../persistencia/repositorios/IntentoRepositorio');
 const pistasUsadas = require('../../persistencia/repositorios/PistaUsadaRepositorio');
 const progresos = require('../../persistencia/repositorios/ProgresoRepositorio');
 
-const Inves = require('../../dominio/modelos/Investigacion');
+const InvestigacionFacade = require('../../aplicacion/facade/InvestigacionFacade');
 
-const guardarProgreso = (req, res) => {
+const investigacionFacade = new InvestigacionFacade();
+
+const guardarProgreso = async (req, res) => {
 
     const { investigacionId } = req.params;
 
-    const id = Number(investigacionId);
-
     // Buscar la investigación
-
-    const investigacion = investigaciones.find(
-        investigacion => investigacion.id === id
-    );
+    const investigacion = await investigaciones.buscarPorId(investigacionId);
 
     if (!investigacion) {
         return res.status(404).json({
@@ -25,68 +22,36 @@ const guardarProgreso = (req, res) => {
         });
     }
 
-    // Obtener información de la investigación
-    const evidenciasInvestigacion = evidencias.filter(
-        evidencia =>
-            evidencia.investigacionId === id
-    );
+    const id = investigacion.id;
 
-    const acertijosInvestigacion = acertijos.filter(
-        acertijo =>
-            acertijo.investigacionId === id
-    );
-
-    const intentosInvestigacion = intentos.filter(
-        intento =>
-            intento.investigacionId === id
-    );
-
-    const pistasInvestigacion = pistasUsadas.filter(
-        pista =>
-            pista.investigacionId === id
-    );
-
-    // Contar progreso
-    const evidenciasDesbloqueadas =
-        evidenciasInvestigacion.filter(
-            evidencia => evidencia.desbloqueada === true
-        ).length;
+    // Contar progreso (el catálogo es común; lo desbloqueado es de este jugador)
+    const [desbloqueadas, catalogo, totalAcertijos, intentosRealizados, pistasUtilizadas] =
+        await Promise.all([
+            investigacionFacade.evidenciasDesbloqueadas(investigacion),
+            evidencias.obtenerTodas(),
+            acertijos.contar(),
+            intentos.contarPorInvestigacion(id),
+            pistasUsadas.contarPorInvestigacion(id)
+        ]);
 
     const acertijosResueltos =
-        acertijosInvestigacion.filter(
-            acertijo => acertijo.resuelto === true
-        ).length;
+        investigacion.acertijosResueltos.length;
 
-    // Buscar si ya existe un progreso guardado
-    const progresoExistente = progresos.find(
-        progreso =>
-            progreso.investigacionId === id
-    );
+    const porcentajeCompletado =
+        Math.round((acertijosResueltos / Math.max(totalAcertijos, 1)) * 100);
 
-    const progreso = {
+    const progreso = await progresos.guardar({
         investigacionId: id,
-        estado: investigacion.estado,
-        evidenciasDesbloqueadas,
-        evidenciasTotales: evidenciasInvestigacion.length,
+        estado: investigacion.obtenerEstado(),
+        evidenciasDesbloqueadas: desbloqueadas.length,
+        evidenciasTotales: catalogo.length,
         acertijosResueltos,
-        acertijosTotales: acertijosInvestigacion.length,
-        intentosRealizados: intentosInvestigacion.length,
-        pistasUtilizadas: pistasInvestigacion.length,
-        fechaGuardado: new Date()
-    };
-
-    if (progresoExistente) {
-
-        Object.assign(
-            progresoExistente,
-            progreso
-        );
-
-    } else {
-
-        progresos.push(progreso);
-
-    }
+        acertijosTotales: totalAcertijos,
+        intentosRealizados,
+        pistasUtilizadas,
+        tiempoInvestigacion: investigacion.obtenerTiempoTranscurrido(),
+        porcentajeCompletado
+    });
 
     res.status(200).json({
         mensaje: 'Progreso guardado correctamente',
@@ -95,16 +60,11 @@ const guardarProgreso = (req, res) => {
 };
 
 
-const obtenerProgreso = (req, res) => {
+const obtenerProgreso = async (req, res) => {
 
     const { investigacionId } = req.params;
 
-    const id = Number(investigacionId);
-
-    const progreso = progresos.find(
-        progreso =>
-            progreso.investigacionId === id
-    );
+    const progreso = await progresos.buscarPorInvestigacion(investigacionId);
 
     if (!progreso) {
         return res.status(404).json({
