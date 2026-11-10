@@ -1,17 +1,20 @@
+// Forma de los acertijos del catálogo (AcertijoRepositorio).
+// El estado "resuelto" es de cada jugador: vive en Investigacion.acertijosResueltos.
 class Acertijo {
     constructor(
         id,
-        investigacionId,
+        codigo,
+        titulo,
         pregunta,
-        respuesta,
-        evidenciaId
+        respuesta,   // string o lista de respuestas aceptadas
+        evidenciaId  // evidencia sobre la que se plantea
     ) {
         this.id = id;
-        this.investigacionId = investigacionId;
+        this.codigo = codigo;
+        this.titulo = titulo;
         this.pregunta = pregunta;
         this.respuesta = respuesta;
         this.evidenciaId = evidenciaId;
-        this.resuelto = false;
     }
 }
 

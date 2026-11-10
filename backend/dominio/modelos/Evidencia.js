@@ -1,18 +1,25 @@
+// Forma de las evidencias del catálogo (EvidenciaRepositorio).
+// tipo: 'documento' | 'fotografia' | 'audio'
+// desbloqueadaPor: id del acertijo que la revela (null = visible desde el inicio).
 class Evidencia {
     constructor(
         id,
-        investigacionId,
+        codigo,
         tipo,
         titulo,
         contenido,
-        desbloqueada
+        archivo,
+        acertijoId,
+        desbloqueadaPor
     ) {
         this.id = id;
-        this.investigacionId = investigacionId;
+        this.codigo = codigo;
         this.tipo = tipo;
         this.titulo = titulo;
         this.contenido = contenido;
-        this.desbloqueada = desbloqueada;
+        this.archivo = archivo;
+        this.acertijoId = acertijoId;
+        this.desbloqueadaPor = desbloqueadaPor;
     }
 }
 

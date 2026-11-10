@@ -1,21 +1,14 @@
-const evidencias = require('../../persistencia/repositorios/EvidenciaRepositorio');
+const InvestigacionFacade = require('../../aplicacion/facade/InvestigacionFacade');
 
-const obtenerEvidencias = (req, res) => {
+const investigacionFacade = new InvestigacionFacade();
 
-    console.log('EVIDENCIAS:', evidencias);
-    console.log('ES ARREGLO:', Array.isArray(evidencias));
-
+const obtenerEvidencias = async (req, res) => {
     const { investigacionId } = req.params;
 
-    const evidenciasInvestigacion = evidencias.filter(
-        evidencia =>
-            evidencia.investigacionId === Number(investigacionId)
-    );
+    const { codigo, ...datos } =
+        await investigacionFacade.obtenerEvidencias(investigacionId);
 
-    res.status(200).json({
-        mensaje: 'Evidencias obtenidas correctamente',
-        evidencias: evidenciasInvestigacion
-    });
+    res.status(codigo).json(datos);
 };
 
 module.exports = {
