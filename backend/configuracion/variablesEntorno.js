@@ -18,5 +18,6 @@ module.exports = {
         user: process.env.DB_USER || 'postgres',
         password: process.env.DB_PASSWORD || 'postgres',
         database: process.env.DB_NAME || 'lastseen'
-    }
+    },
+    ADMIN_USUARIO: process.env.ADMIN_USUARIO || 'AdministradorLastSeen1'
 };

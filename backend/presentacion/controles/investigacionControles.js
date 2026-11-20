@@ -1,4 +1,5 @@
 const investigaciones = require('../../persistencia/repositorios/InvestigacionRepositorio');
+const { esAdministrador } = require('./adminControles');
 
 const iniciarInvestigacion = async (req, res) => {
     const { nombreUsuario: nombre } = req.body || {};
@@ -9,6 +10,13 @@ const iniciarInvestigacion = async (req, res) => {
     if (!nombreUsuario) {
         return res.status(400).json({
             mensaje: 'El nombre del usuario es obligatorio'
+        });
+    }
+
+    if (esAdministrador(nombreUsuario)) {
+        return res.status(200).json({
+            mensaje: 'Bienvenido, administrador',
+            rol: 'administrador'
         });
     }
 

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Last Seen - Panel de administración</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/tablero.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Oswald:wght@500;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body class="dashboard-bg">
+    <div class="dashboard-container">
+
+        <!-- Panel Lateral Izquierdo -->
+        <aside class="sidebar">
+            <div class="case-file">
+                <span class="case-code">ACCESO RESTRINGIDO</span>
+                <span class="case-title">PANEL DE ADMINISTRACIÓN</span>
+                <span class="case-detective">Expediente SJ-2025-001</span>
+            </div>
+
+            <nav class="main-menu">
+                <ul>
+                    <li><a href="#" class="menu-item active" data-seccion="investigaciones">📁 INVESTIGACIONES</a></li>
+                    <li><a href="#" class="menu-item" data-seccion="evidencias">📋 EVIDENCIAS</a></li>
+                    <li><a href="#" class="menu-item" data-seccion="acertijos">🧩 ACERTIJOS</a></li>
+                    <li><a href="#" class="menu-item" data-seccion="pistas">🔍 PISTAS</a></li>
+                    <li><a href="#" class="menu-item" data-seccion="ranking">🏆 RANKING</a></li>
+                    <li><a href="#" class="menu-item" id="btnCerrarSesion">🚪 CERRAR SESIÓN</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Área Central -->
+        <main class="main-board admin-board">
+            <h2 id="tituloSeccion" class="board-title">INVESTIGACIONES</h2>
+            <p id="resumenSeccion" class="admin-summary"></p>
+            <div id="contenidoSeccion" class="admin-panel" aria-live="polite">
+                <p class="admin-empty">Cargando…</p>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/admin.js"></script>
+</body>
+
+</html>

@@ -11,6 +11,21 @@ async function obtenerPorAcertijo(acertijoId) {
     return rows;
 }
 
+// Todas las pistas del expediente con cuántas veces las han pedido (panel del administrador)
+async function obtenerTodas() {
+    const { rows } = await pool.query(`
+        SELECT p.id, p.acertijo_id AS "acertijoId", a.codigo || ' · ' || a.titulo AS acertijo,
+               p.orden, p.descripcion, COUNT(pu.id) AS usos
+        FROM pista p
+        JOIN acertijo a ON a.id = p.acertijo_id
+        LEFT JOIN pista_usada pu ON pu.pista_id = p.id
+        GROUP BY p.id, a.codigo, a.titulo
+        ORDER BY p.acertijo_id, p.orden
+    `);
+    return rows;
+}
+
 module.exports = {
-    obtenerPorAcertijo
+    obtenerPorAcertijo,
+    obtenerTodas
 };

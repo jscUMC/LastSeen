@@ -14,6 +14,7 @@ const intentoRoutes = require('../presentacion/rutas/intentoRutas');
 const pistaRoutes = require('../presentacion/rutas/pistaRutas');
 const pistaUsoRoutes = require('../presentacion/rutas/pistaUsoRutas');
 const progresoRoutes =require('../presentacion/rutas/progresoRutas');
+const adminRoutes = require('../presentacion/rutas/adminRutas');
 const app = express();
 
 app.use(cors());
@@ -28,6 +29,7 @@ app.use('/api/investigaciones', intentoRoutes);
 app.use('/api/investigaciones', pistaRoutes);
 app.use('/api/investigaciones', pistaUsoRoutes);
 app.use('/api/investigaciones', progresoRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Sirve el frontend y los recursos del expediente (fotos, PDF, audios) desde el mismo servidor
 app.use(express.static(path.join(__dirname, '../../frontend')));

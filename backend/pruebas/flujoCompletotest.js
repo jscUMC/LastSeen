@@ -5,6 +5,7 @@ const app = require('../sistema/app');
 const pool = require('../persistencia/conexion/database');
 const repoAcertijos = require('../persistencia/repositorios/AcertijoRepositorio');
 const repoEvidencias = require('../persistencia/repositorios/EvidenciaRepositorio');
+const { ADMIN_USUARIO } = require('../configuracion/variablesEntorno');
 
 const servidor = app.listen(0);
 const base = `http://localhost:${servidor.address().port}`;
@@ -85,6 +86,32 @@ const respuestasJugador = ['8', 'laura méndez', 'Registro 023', '15-04-2022', '
     assert.strictEqual(guardado.datos.progreso.acertijosResueltos, 9);
     assert.strictEqual((await pedir('GET', '/api/investigaciones/999999999/evidencias')).status, 404);
     assert.strictEqual((await pedir('GET', '/api/investigaciones/abc/evidencias')).status, 404);
+
+    // Administrador: entra al panel sin crear partida y solo él accede a /api/admin
+    const totalAntes = (await pool.query('SELECT COUNT(*) AS n FROM investigacion')).rows[0].n;
+    const admin = await pedir('POST', '/api/investigaciones', { nombreUsuario: ` ${ADMIN_USUARIO} ` });
+    assert.strictEqual(admin.status, 200);
+    assert.strictEqual(admin.datos.rol, 'administrador');
+    assert.strictEqual((await pool.query('SELECT COUNT(*) AS n FROM investigacion')).rows[0].n, totalAntes);
+    assert.notStrictEqual((await pedir('POST', '/api/investigaciones', { nombreUsuario: ADMIN_USUARIO.slice(0, -1) })).datos.rol, 'administrador');
+
+    const pedirAdmin = (ruta, usuario) => fetch(base + ruta, { headers: usuario ? { 'x-admin-usuario': encodeURIComponent(usuario) } : {} });
+    for (const ruta of ['/api/admin/investigaciones', '/api/admin/evidencias', '/api/admin/acertijos', '/api/admin/pistas']) {
+        assert.strictEqual((await pedirAdmin(ruta)).status, 401, ruta);
+        assert.strictEqual((await pedirAdmin(ruta, 'Ana')).status, 401, ruta);
+        assert.strictEqual((await pedirAdmin(ruta, ADMIN_USUARIO)).status, 200, ruta);
+    }
+    const panel = await (await pedirAdmin('/api/admin/investigaciones', ADMIN_USUARIO)).json();
+    const filaAna = panel.investigaciones.find(i => i.id === idA);
+    assert.strictEqual(filaAna.acertijosResueltos, 9);
+    assert.strictEqual(filaAna.estado, 'FINALIZADA');
+    const panelEvidencias = await (await pedirAdmin('/api/admin/evidencias', ADMIN_USUARIO)).json();
+    assert.strictEqual(panelEvidencias.evidencias.length, evidencias.length);
+    const panelAcertijos = await (await pedirAdmin('/api/admin/acertijos', ADMIN_USUARIO)).json();
+    assert.strictEqual(panelAcertijos.acertijos[0].respuesta[0], '08');
+    const panelPistas = await (await pedirAdmin('/api/admin/pistas', ADMIN_USUARIO)).json();
+    assert.strictEqual(panelPistas.pistas.length, 18);
+    assert.ok(panelPistas.pistas.find(p => p.id === 1).usos >= 1);
 
     // Recursos estáticos del expediente
     for (const e of evidencias) {

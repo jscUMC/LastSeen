@@ -63,8 +63,25 @@ async function guardarFinalizacion(investigacion) {
     return rowCount === 1;
 }
 
+// Listado completo para el administrador, con el avance de cada partida.
+// shortcut: devuelve todas las filas sin paginar; paginar si llegan a ser miles de partidas.
+async function listarTodas() {
+    const { rows } = await pool.query(`
+        SELECT i.id, i.nombre_usuario AS "nombreUsuario", i.estado,
+               i.fecha_inicio AS "fechaInicio", i.fecha_finalizacion AS "fechaFinalizacion",
+               i.tiempo_utilizado AS "tiempoUtilizado",
+               (SELECT COUNT(*) FROM acertijo_resuelto r WHERE r.investigacion_id = i.id) AS "acertijosResueltos",
+               (SELECT COUNT(*) FROM intento t WHERE t.investigacion_id = i.id) AS intentos,
+               (SELECT COUNT(*) FROM pista_usada p WHERE p.investigacion_id = i.id) AS "pistasUsadas"
+        FROM investigacion i
+        ORDER BY i.id DESC
+    `);
+    return rows;
+}
+
 module.exports = {
     crear,
+    listarTodas,
     buscarPorId,
     registrarAcertijoResuelto,
     guardarFinalizacion

@@ -19,6 +19,14 @@ loginForm.addEventListener('submit', async (e) => {
             
             const data = await response.json();
 
+            // El servidor reconoce el usuario del administrador: va a su panel en lugar del juego
+            if (response.ok && data.rol === 'administrador') {
+                localStorage.clear();
+                sessionStorage.setItem('adminUsuario', usernameInput); // se borra al cerrar la pestaña
+                window.location.href = 'admin.html';
+                return;
+            }
+
             if (response.ok) {
 
                 localStorage.clear(); // descarta datos de una partida anterior

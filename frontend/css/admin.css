@@ -1,0 +1,119 @@
+/* Panel de administración: reutiliza el tablero (tablero.css) y añade las tablas */
+
+.admin-board {
+    min-width: 0;
+}
+
+/* En el tablero el título se monta sobre el corcho; aquí va encima del resumen */
+.admin-board .board-title {
+    margin-bottom: 0;
+}
+
+.sidebar {
+    flex-shrink: 0;
+}
+
+.admin-table td:first-child {
+    white-space: nowrap;
+}
+
+.admin-summary {
+    text-align: center;
+    color: #bbb;
+    margin: 6px 0 14px;
+}
+
+.admin-panel {
+    background-color: rgba(20, 20, 20, 0.92);
+    border: 1px solid #444;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+    flex: 1;
+    min-height: 0;
+    display: flex;
+}
+
+.admin-table-wrapper {
+    width: 100%;
+    max-height: calc(100vh - 170px);
+    overflow: auto;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    color: #ddd;
+}
+
+.admin-table th {
+    position: sticky;
+    top: 0;
+    background: #2a2722;
+    color: #ffb74d;
+    text-align: left;
+    padding: 10px 8px;
+    letter-spacing: 1px;
+    font-size: 0.8rem;
+    border-bottom: 2px solid #8b0000;
+}
+
+.admin-table td {
+    padding: 9px 8px;
+    border-bottom: 1px solid #333;
+    vertical-align: top;
+}
+
+.admin-table tbody tr:hover {
+    background: rgba(255, 183, 77, 0.08);
+}
+
+.admin-muted {
+    color: #999;
+    font-size: 0.85rem;
+}
+
+.admin-thumb {
+    width: 90px;
+    height: 64px;
+    object-fit: cover;
+    border: 3px solid #f4f4f4;
+    display: block;
+}
+
+.admin-table audio {
+    width: 220px;
+}
+
+.admin-link,
+.admin-table a {
+    color: #ffb74d;
+}
+
+.respuesta {
+    color: #8bc34a;
+}
+
+.estado {
+    font-size: 0.75rem;
+    font-weight: bold;
+    padding: 2px 6px;
+    letter-spacing: 1px;
+    white-space: nowrap;
+}
+
+.estado.fin {
+    border: 1px solid #4caf50;
+    color: #4caf50;
+}
+
+.estado.curso {
+    border: 1px solid #ffb74d;
+    color: #ffb74d;
+}
+
+.admin-empty {
+    margin: auto;
+    padding: 40px;
+    color: #999;
+    text-align: center;
+}
