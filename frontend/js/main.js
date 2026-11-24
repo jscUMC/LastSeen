@@ -23,7 +23,7 @@ loginForm.addEventListener('submit', async (e) => {
             if (response.ok && data.rol === 'administrador') {
                 localStorage.clear();
                 sessionStorage.setItem('adminUsuario', usernameInput); // se borra al cerrar la pestaña
-                window.location.href = 'admin.html';
+                window.location.href = '/admin/'; // panel en React (admin-react)
                 return;
             }
 

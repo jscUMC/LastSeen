@@ -1,3 +1,4 @@
+const fs = require('fs');
 const path = require('path');
 const express = require('express');
 const cors = require('cors');
@@ -34,6 +35,10 @@ app.use('/api/admin', adminRoutes);
 // Sirve el frontend y los recursos del expediente (fotos, PDF, audios) desde el mismo servidor
 app.use(express.static(path.join(__dirname, '../../frontend')));
 
+// Panel de administración en React: se compila con "npm run build" dentro de admin-react
+const panelAdmin = path.join(__dirname, '../../admin-react/dist');
+app.use('/admin', express.static(panelAdmin));
+
 // Express 5 envía aquí los errores de los controles async (p. ej. PostgreSQL apagado)
 app.use((error, req, res, next) => {
     // 22P02 = id con formato inválido (p. ej. /api/investigaciones/abc/...)
@@ -50,8 +55,12 @@ if (require.main === module) {
         try {
             await pool.query('SELECT 1 FROM investigacion LIMIT 1');
             console.log('Conectado a PostgreSQL');
+            if (!fs.existsSync(panelAdmin)) {
+                console.warn('⚠ El panel de administración no está compilado: cd admin-react && npm install && npm run build');
+            }
         } catch (error) {
             console.error(`⚠ No se pudo usar la base de datos: ${error.message}`);
+            console.error('  Enciende PostgreSQL, revisa backend/.env y ejecuta: npm run db:crear');
         }
     });
 }
