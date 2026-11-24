@@ -19,7 +19,9 @@ function aDominio(fila, acertijosResueltos) {
 
 async function crear(nombreUsuario) {
     const { rows } = await pool.query(
-        'INSERT INTO investigacion (nombre_usuario) VALUES ($1) RETURNING *',
+        `INSERT INTO investigacion (nombre_usuario)
+         VALUES ($1)
+         RETURNING id, nombre_usuario, fecha_inicio, fecha_finalizacion, tiempo_utilizado, estado`,
         [nombreUsuario]
     );
     return aDominio(rows[0], []);
@@ -28,7 +30,12 @@ async function crear(nombreUsuario) {
 async function buscarPorId(id) {
     if (!Number.isInteger(Number(id))) return null;
 
-    const { rows } = await pool.query('SELECT * FROM investigacion WHERE id = $1', [Number(id)]);
+    const { rows } = await pool.query(
+        `SELECT id, nombre_usuario, fecha_inicio, fecha_finalizacion, tiempo_utilizado, estado
+         FROM investigacion
+         WHERE id = $1`,
+        [Number(id)]
+    );
     if (rows.length === 0) return null;
 
     const resueltos = await pool.query(
@@ -70,9 +77,9 @@ async function listarTodas() {
         SELECT i.id, i.nombre_usuario AS "nombreUsuario", i.estado,
                i.fecha_inicio AS "fechaInicio", i.fecha_finalizacion AS "fechaFinalizacion",
                i.tiempo_utilizado AS "tiempoUtilizado",
-               (SELECT COUNT(*) FROM acertijo_resuelto r WHERE r.investigacion_id = i.id) AS "acertijosResueltos",
-               (SELECT COUNT(*) FROM intento t WHERE t.investigacion_id = i.id) AS intentos,
-               (SELECT COUNT(*) FROM pista_usada p WHERE p.investigacion_id = i.id) AS "pistasUsadas"
+               (SELECT COUNT(r.acertijo_id) FROM acertijo_resuelto r WHERE r.investigacion_id = i.id) AS "acertijosResueltos",
+               (SELECT COUNT(t.id) FROM intento t WHERE t.investigacion_id = i.id) AS intentos,
+               (SELECT COUNT(p.id) FROM pista_usada p WHERE p.investigacion_id = i.id) AS "pistasUsadas"
         FROM investigacion i
         ORDER BY i.id DESC
     `);

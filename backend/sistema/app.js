@@ -52,7 +52,6 @@ if (require.main === module) {
             console.log('Conectado a PostgreSQL');
         } catch (error) {
             console.error(`⚠ No se pudo usar la base de datos: ${error.message}`);
-            console.error('  Enciende PostgreSQL, revisa backend/.env y ejecuta: npm run db:crear');
         }
     });
 }
