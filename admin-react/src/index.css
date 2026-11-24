@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+/* Colores y fuentes de Last Seen como utilidades de Tailwind: bg-papel, text-ambar, font-titulo… */
+@theme {
+    --font-titulo: "Oswald", sans-serif;
+    --font-maquina: "Courier Prime", monospace;
+    --color-papel: #e9e1cc;
+    --color-sangre: #8b0000;
+    --color-ambar: #ffb74d;
+    --color-acierto: #8bc34a;
+}
+
+body {
+    @apply bg-neutral-950 font-maquina text-neutral-200;
+}
